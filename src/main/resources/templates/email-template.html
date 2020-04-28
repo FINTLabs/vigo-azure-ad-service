@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<div>
+    <h2 th:text="'Hei / Dear ' + ${consultantFullname} + '!'"/>
+    <p th:text="'Velkommen som konsulent hos Vigo IKS. Følg linken under for å registrere deg. Hvis du trenger mer informasjon så ta kontakt med meg.'"/>
+    <p th:text="'Welcome as a consultant at Vigo IKS. Follow the link below to register. Do not hesitate to contact me if you have any questions.'"/>
+    <div style="margin: 32px 0">
+    <a th:href="${registrationUrl}" style="background:#8cc640; padding:16px 48px; border-radius: 4px; text-decoration: none; color: #333; font-size: 16px;">Klikk her for å registere deg</a>
+    </div>
+
+    <p>
+        <strong>Med vennlig hilsen / Best Regards</strong>
+        <div th:text="${ownerFullname}"/>
+        <div th:text="'M: ' + ${ownerMobile} + ' | E: ' + ${ownerEmail} + ' | W: https://www.vigoiks.no'"/>
+        <img src="" data-th-src="|cid:logo|" style="margin:16px 0;" alt="Vigo IKS logo"/>
+    </p>
+
+</div>
+
+</body>
+
+</html>
