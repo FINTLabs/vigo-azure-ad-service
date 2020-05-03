@@ -1,6 +1,6 @@
 FROM fintlabs.azurecr.io/vigo-azure-ad-frontend:latest as client
 
-FROM gradle:4.10.2-jdk11-alpine as builder
+FROM gradle:6.3.0-jdk11-alpine as builder
 USER root
 COPY . .
 COPY --from=client /src/build/ src/main/resources/static/
