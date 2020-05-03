@@ -1,4 +1,4 @@
-package no.vigo.azure.ad.invite.token;
+package no.vigo.notification.token;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

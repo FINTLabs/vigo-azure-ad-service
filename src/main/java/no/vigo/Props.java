@@ -1,4 +1,4 @@
-package no.vigo.azure;
+package no.vigo;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +16,7 @@ public class Props {
     @Value("${fint.azure.client.secret}")
     private String clientSecret;
 
-    @Value("${fint.azure.client.scopes:https://graph.microsoft.com/.default}")
+    @Value("${fint.azure.client.scopes:https://graph.microsoft.com/.default     }")
     List<String> scopes;
 
     @Value("${fint.azure.tenant}")
@@ -24,6 +24,12 @@ public class Props {
 
     @Value("${fint.azure.invite.base-url:http://localhost:8080/api/inviation?t=}")
     private String baseUrl;
+
+    @Value("${fint.azure.qlik.users.owner:hans@vigoikt.no}")
+    private String qlikUsersOwner;
+
+    @Value("${fint.azure.qlik.allowed-domains}")
+    private List<String> allowedDomains;
 
 
 }

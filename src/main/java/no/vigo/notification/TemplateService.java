@@ -1,4 +1,4 @@
-package no.vigo.azure.ad.invite;
+package no.vigo.notification;
 
 import com.microsoft.graph.models.extensions.User;
 import org.springframework.stereotype.Service;

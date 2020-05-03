@@ -1,4 +1,4 @@
-package no.vigo.azure.ad.invite;
+package no.vigo.notification;
 
 import com.google.api.client.util.Base64;
 import com.google.api.services.gmail.Gmail;

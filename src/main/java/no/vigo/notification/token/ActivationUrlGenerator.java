@@ -1,7 +1,7 @@
-package no.vigo.azure.ad.invite.token;
+package no.vigo.notification.token;
 
 import com.microsoft.graph.models.extensions.User;
-import no.vigo.azure.Props;
+import no.vigo.Props;
 import no.rogfk.jwt.SpringJwtTokenizer;
 import org.springframework.stereotype.Component;
 

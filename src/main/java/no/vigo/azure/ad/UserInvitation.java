@@ -1,4 +1,4 @@
-package no.vigo.azure.ad.invite;
+package no.vigo.azure.ad;
 
 import lombok.Data;
 
