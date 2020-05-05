@@ -16,7 +16,7 @@ public class Props {
     @Value("${fint.azure.client.secret}")
     private String clientSecret;
 
-    @Value("${fint.azure.client.scopes:https://graph.microsoft.com/.default     }")
+    @Value("${fint.azure.client.scopes:https://graph.microsoft.com/.default}")
     List<String> scopes;
 
     @Value("${fint.azure.tenant}")
@@ -27,6 +27,12 @@ public class Props {
 
     @Value("${fint.azure.qlik.users.owner:hans@vigoikt.no}")
     private String qlikUsersOwner;
+
+    @Value("${fint.azure.qlik.redirect-url:https://qs.fintlabs.no}")
+    private String qlikRedirectUrl;
+
+    @Value("${fint.azure.qlik.send-invitation:false}")
+    private Boolean qlikSendInvitation;
 
     @Value("${fint.azure.qlik.allowed-domains}")
     private List<String> allowedDomains;

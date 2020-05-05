@@ -101,8 +101,9 @@ public class UserService extends AzureServiceAbstract {
     public Invitation invite(QLikUser qLikUser, String manager) {
         Invitation invitation = new Invitation();
         invitation.invitedUserEmailAddress = qLikUser.getEmail().toLowerCase();
-        invitation.inviteRedirectUrl = "https://qs.fintlabs.no";
+        invitation.inviteRedirectUrl = props.getQlikRedirectUrl();
         invitation.invitedUserDisplayName = String.format("%s %s", qLikUser.getFirstName(), qLikUser.getLastName());
+        invitation.sendInvitationMessage = props.getQlikSendInvitation();
 
         return invite(invitation, manager);
     }
