@@ -43,7 +43,7 @@ spec:
             secretName: google-gmail-serviceaccount
       containers:
         - name: vigo-azure-ad-service
-          image: fintlabs.azurecr.io/vigo-azure-ad-service:build.7
+          image: fintlabs.azurecr.io/vigo-azure-ad-service:build.8
           volumeMounts:
             - mountPath: /credentials
               name: credentials

@@ -123,12 +123,11 @@ public class UserService extends AzureServiceAbstract {
         try {
             invitation.invitedUserEmailAddress = email;
             invitation.inviteRedirectUrl = "https://qs.fintlabs.no";
+            invitation.sendInvitationMessage = true;
 
-            Invitation invitationResponse = graphClient.invitations()
+            return graphClient.invitations()
                     .buildRequest()
                     .post(invitation);
-
-            return invitationResponse;
         } catch (ClientException e) {
             log.error("Unable to re-invite {}", invitation.invitedUserEmailAddress);
             return null;
