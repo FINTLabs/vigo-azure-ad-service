@@ -29,7 +29,7 @@ public abstract class AzureServiceAbstract {
                 .builder()
                 .authenticationProvider(authProvider)
                 .buildClient();
-        graphClient.setServiceRoot("https://graph.microsoft.com/beta/");
+        graphClient.setServiceRoot("https://graph.microsoft.com/beta");
 
     }
 }

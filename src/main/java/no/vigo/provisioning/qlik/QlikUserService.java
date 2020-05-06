@@ -32,9 +32,13 @@ public class QlikUserService {
         this.props = props;
     }
 
-    @Scheduled(fixedDelay = 3600000L, initialDelay = 5000L)
+    @Scheduled(
+            fixedDelayString = "${fint.azure.qlik.provisioning.fixed-delay:900000}",
+            initialDelayString = "${fint.azure.qlik.provisioning.initial-delay:5000}"
+    )
     public void synchronize() {
-        log.info("fetching users from DK");
+        log.info("Start provisioning users");
+        log.debug("Fetching users from VIGOS");
         String sql = "select * from CBRUKER\n" +
                 "where ACCQVV = 'J'\n" +
                 "or ACCQVD = 'J'\n" +
@@ -46,7 +50,7 @@ public class QlikUserService {
         log.info("Found {} QLik users to provisioning", qLikUsers.size());
         qLikUsers.forEach(qLikUser -> {
             try {
-                User user = userService.usersExists(qLikUser.getAzureADUPN());
+                    User user = userService.usersExists(qLikUser.getAzureADUPN());
 
                 if (shouldUserExist(qLikUser)) {
                     log.trace("Updating user {}", qLikUser.getEmail());
@@ -70,10 +74,11 @@ public class QlikUserService {
                     log.info("Inviting user {}", qLikUser.getEmail());
                     userService.invite(qLikUser, props.getQlikUsersOwner());
                 }
-
+            } catch (Exception e) {
+                log.error(e.getMessage());
             }
-
         });
+        log.info("End provisioning users");
     }
 
     private Boolean shouldUserExist(QLikUser qLikUser) {
