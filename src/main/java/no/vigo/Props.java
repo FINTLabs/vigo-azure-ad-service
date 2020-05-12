@@ -34,8 +34,10 @@ public class Props {
     @Value("${fint.azure.qlik.send-invitation:false}")
     private Boolean qlikSendInvitation;
 
+    @Value("${fint.azure.qlik.invitation-message-body}")
+    private String qlikInvitationMessageBody;
+
     @Value("${fint.azure.qlik.allowed-domains}")
     private List<String> allowedDomains;
-
 
 }

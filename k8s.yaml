@@ -43,7 +43,7 @@ spec:
             secretName: google-gmail-serviceaccount
       containers:
         - name: vigo-azure-ad-service
-          image: fintlabs.azurecr.io/vigo-azure-ad-service:build.10
+          image: fintlabs.azurecr.io/vigo-azure-ad-service:build.11
           volumeMounts:
             - mountPath: /credentials
               name: credentials
@@ -71,3 +71,7 @@ spec:
               value: '/credentials/serviceaccount.json'
             - name: fint.azure.qlik.allowed-domains
               value: rogfk.no,innlandetfylke.no
+            - name: fint.azure.qlik.send-invitation
+              value: "true"
+            - name: fint.azure.qlik.invitation-message-body
+              value: "Du mottar denne meldingen da du har lisens for Qlikview eller Sense i dagens Citrix miljø. I forbindelse  med etableringen av VIGO IKS sin nye plattform for Qlikview og Sense må du ved hjelp av lenken verifisere at du ønsker bli opprettet som bruker. Eksisterende løsning vil fortsatt virke parallelt med etablering av den nye og dere blir informert så snart det dukker opp innhold for din fylkeskommune."

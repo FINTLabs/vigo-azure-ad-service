@@ -5,6 +5,7 @@ import com.microsoft.graph.core.ClientException;
 import com.microsoft.graph.http.GraphServiceException;
 import com.microsoft.graph.models.extensions.DirectoryObject;
 import com.microsoft.graph.models.extensions.Invitation;
+import com.microsoft.graph.models.extensions.InvitedUserMessageInfo;
 import com.microsoft.graph.models.extensions.User;
 import com.microsoft.graph.requests.extensions.IDirectoryObjectCollectionWithReferencesPage;
 import com.microsoft.graph.requests.extensions.IDirectoryObjectCollectionWithReferencesRequestBuilder;
@@ -104,6 +105,9 @@ public class UserService extends AzureServiceAbstract {
         invitation.inviteRedirectUrl = props.getQlikRedirectUrl();
         invitation.invitedUserDisplayName = String.format("%s %s", qLikUser.getFirstName(), qLikUser.getLastName());
         invitation.sendInvitationMessage = props.getQlikSendInvitation();
+        InvitedUserMessageInfo invitedUserMessageInfo = new InvitedUserMessageInfo();
+        invitedUserMessageInfo.customizedMessageBody = props.getQlikInvitationMessageBody();
+        invitation.invitedUserMessageInfo = invitedUserMessageInfo;
 
         return invite(invitation, manager);
     }
