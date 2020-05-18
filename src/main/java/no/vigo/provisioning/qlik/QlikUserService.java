@@ -50,7 +50,7 @@ public class QlikUserService {
         log.info("Found {} QLik users to provisioning", qLikUsers.size());
         qLikUsers.forEach(qLikUser -> {
             try {
-                    User user = userService.usersExists(qLikUser.getAzureADUPN());
+                User user = userService.usersExists(qLikUser.getAzureADUPN());
 
                 if (shouldUserExist(qLikUser)) {
                     log.trace("Updating user {}", qLikUser.getEmail());

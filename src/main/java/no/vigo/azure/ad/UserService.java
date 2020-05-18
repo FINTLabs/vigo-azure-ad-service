@@ -107,6 +107,7 @@ public class UserService extends AzureServiceAbstract {
         invitation.sendInvitationMessage = props.getQlikSendInvitation();
         InvitedUserMessageInfo invitedUserMessageInfo = new InvitedUserMessageInfo();
         invitedUserMessageInfo.customizedMessageBody = props.getQlikInvitationMessageBody();
+        invitedUserMessageInfo.messageLanguage = "no";
         invitation.invitedUserMessageInfo = invitedUserMessageInfo;
 
         return invite(invitation, manager);
