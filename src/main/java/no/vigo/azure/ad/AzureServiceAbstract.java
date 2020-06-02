@@ -4,6 +4,7 @@ import com.microsoft.graph.auth.confidentialClient.ClientCredentialProvider;
 import com.microsoft.graph.auth.enums.NationalCloud;
 import com.microsoft.graph.models.extensions.IGraphServiceClient;
 import com.microsoft.graph.requests.extensions.GraphServiceClient;
+import com.microsoft.graph.serializer.ISerializer;
 import no.vigo.Props;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,9 @@ public abstract class AzureServiceAbstract {
                 .authenticationProvider(authProvider)
                 .buildClient();
         graphClient.setServiceRoot("https://graph.microsoft.com/beta");
+    }
 
+    public ISerializer getSerializer() {
+        return graphClient.getSerializer();
     }
 }

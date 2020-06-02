@@ -1,6 +1,6 @@
 package no.vigo.provisioning.qlik;
 
-import com.microsoft.graph.models.extensions.DirectoryObject;
+import com.microsoft.graph.models.extensions.Group;
 import com.microsoft.graph.models.extensions.User;
 import lombok.extern.slf4j.Slf4j;
 import no.vigo.Props;
@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -55,6 +57,8 @@ public class QlikUserService {
                 if (shouldUserExist(qLikUser)) {
                     log.trace("Updating user {}", qLikUser.getEmail());
                     userService.updateUser(getPatchedUser(qLikUser), qLikUser.getAzureADUPN());
+                    User owner = userService.getUserIdByEmail(props.getQlikUsersOwner());
+                    userService.setManager(user.id, owner.id);
 
                     List<String> hasGroups = getHasGroups(qLikUser);
                     List<String> neededGroups = getNeededGroups(qLikUser);
@@ -151,8 +155,14 @@ public class QlikUserService {
 
     }
 
+    private final Supplier<Predicate<Group>> excludeDynamicGroups = () -> group -> !group.groupTypes.contains("DynamicMembership");
+
     private List<String> getHasGroups(QLikUser qLikUser) {
-        List<DirectoryObject> memberOf = userService.getMemberOf(qLikUser.getAzureADUPN());
+        List<Group> memberOf = userService.getMemberOf(qLikUser.getAzureADUPN())
+                .stream()
+                .map(o -> userService.getSerializer().deserializeObject(o.getRawObject().toString(), Group.class))
+                .filter(excludeDynamicGroups.get())
+                .collect(Collectors.toList());
 
         return memberOf.stream()
                 .map(o -> o.id)

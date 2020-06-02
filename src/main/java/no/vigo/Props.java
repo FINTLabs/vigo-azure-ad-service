@@ -25,7 +25,7 @@ public class Props {
     @Value("${fint.azure.invite.base-url:http://localhost:8080/api/inviation?t=}")
     private String baseUrl;
 
-    @Value("${fint.azure.qlik.users.owner:hans@vigoikt.no}")
+    @Value("${fint.azure.qlik.users.owner:hans@vigoiks.no}")
     private String qlikUsersOwner;
 
     @Value("${fint.azure.qlik.redirect-url:https://qlik.fintlabs.no}")
@@ -34,7 +34,7 @@ public class Props {
     @Value("${fint.azure.qlik.send-invitation:false}")
     private Boolean qlikSendInvitation;
 
-    @Value("${fint.azure.qlik.invitation-message-body}")
+    @Value("${fint.azure.qlik.invitation-message-body:test}")
     private String qlikInvitationMessageBody;
 
     @Value("${fint.azure.qlik.allowed-domains}")

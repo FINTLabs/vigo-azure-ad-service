@@ -140,11 +140,11 @@ public class UserService extends AzureServiceAbstract {
     }
 
 
-    private User getUserIdByEmail(String email) {
+    public User getUserIdByEmail(String email) {
         return graphClient.users(email).buildRequest().get();
     }
 
-    private void setManager(String userId, String ownerId) {
+    public void setManager(String userId, String ownerId) {
         JsonObject json = new JsonObject();
         json.addProperty("@odata.id", "https://graph.microsoft.com/v1.0/users/" + ownerId);
 

@@ -43,7 +43,7 @@ spec:
             secretName: google-gmail-serviceaccount
       containers:
         - name: vigo-azure-ad-service
-          image: fintlabs.azurecr.io/vigo-azure-ad-service:build.13
+          image: fintlabs.azurecr.io/vigo-azure-ad-service:build.15
           volumeMounts:
             - mountPath: /credentials
               name: credentials
@@ -71,6 +71,8 @@ spec:
               value: '/credentials/serviceaccount.json'
             - name: fint.azure.qlik.allowed-domains
               value: rogfk.no,innlandetfylke.no
+            - name: fint.azure.qlik.users.owner
+              value: hans@vigoiks.no
             - name: fint.azure.qlik.send-invitation
               value: "true"
             - name: fint.azure.qlik.invitation-message-body
