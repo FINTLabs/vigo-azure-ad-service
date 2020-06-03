@@ -44,7 +44,10 @@ public class GroupService extends AzureServiceAbstract {
 
     public Group getGroupByCountyNumber(String countyNumber) {
 
-        List<Group> groups = getGroupByDispslayNameFiltered(countyNumber);
+        List<Group> groups = getGroupByDispslayNameFiltered(countyNumber)
+                .stream()
+                .filter(o -> !o.displayName.startsWith(String.format("%s_acc", countyNumber)))
+                .collect(Collectors.toList());
 
         if (groups.size() == 1) {
             return groups.get(0);

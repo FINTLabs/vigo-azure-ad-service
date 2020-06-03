@@ -78,9 +78,10 @@ public class QlikUserService {
                     log.info("Inviting user {}", qLikUser.getEmail());
                     userService.invite(qLikUser, props.getQlikUsersOwner());
                 }
-            } catch (Exception e) {
-                log.error(e.getMessage());
             }
+//            catch (Exception e) {
+//                log.error(e.getMessage());
+//            }
         });
         log.info("End provisioning users");
     }
@@ -137,8 +138,8 @@ public class QlikUserService {
     private List<String> getNeededGroups(QLikUser qLikUser) {
         List<String> groups = new ArrayList<>();
 
-        if (qLikUser.getNPrintDeveloper()) groups.add(CBrukerFields.NPRINT_DEVELOPER);
-        if (qLikUser.getNPrintRead()) groups.add(CBrukerFields.NPRINT_READ);
+        if (qLikUser.getNPrintDeveloper()) groups.add(String.format("%s_%s", qLikUser.getCountyNumber(), CBrukerFields.NPRINT_DEVELOPER));
+        if (qLikUser.getNPrintRead()) groups.add(String.format("%s_%s", qLikUser.getCountyNumber(), CBrukerFields.NPRINT_READ));
         if (qLikUser.getQlikSenseDeveloper()) groups.add(CBrukerFields.QLIK_SENSE_DEVELOPER);
         if (qLikUser.getQlikSenseRead()) groups.add(CBrukerFields.QLIK_SENSE_READ);
         if (qLikUser.getQlikViewDeveloper()) groups.add(CBrukerFields.QLIK_VIEW_DEVELOPER);
