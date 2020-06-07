@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<div>
+    <h2 th:text="'Hei ' + ${consultantFullname} + '!'"/>
+    <p th:text="'Vigo IKS inviterer alle Qlikbrukere til å ta i bruk den nye skybaserte løsningen i Azure. Logg inn ved å trykke på invitasjonen under. Tilgangen til løsningen er sikret med tofaktor autentisering. Det vil si at du logger inn med din Microsoft Office 365 bruker (brukernavn og passord) før du blir bedt om å velge autentisering med sms eller app. Vi anbefaler at du velger appen Microsoft Authenticator som ikke medfører ekstra kostnader.'"/>
+    <p th:text="'Når du har logget deg inn, vil du komme til portalen der du kan velge din Qlik – applikasjon, Qlikview eller Qlik Sense. I tillegg kan du velge NPrinting Newsdesk der du kan abonnere på rapporter for eget fylke eller de som er felles for alle fylkeskommunene. Du har også tilgang til databasedokumentasjonen.'"/>
+    <p th:text="'Qlik applikasjonene ligger nå på utsiden av Citrix og vi forventer en raskere og bedre brukeropplevelse. Ta gjerne kontakt dersom du har spørsmål eller trenger mer informasjon.'"/>
+    <div style="margin: 32px 0">
+    <a th:href="${registrationUrl}" style="background:#8cc640; padding:16px 48px; border-radius: 4px; text-decoration: none; color: #333; font-size: 16px;">Klikk her for å registere deg</a>
+    </div>
+
+    <p>
+        <strong>Med vennlig hilsen</strong>
+        <div th:text="${ownerFullname}"/>
+        <div th:text="'M: ' + ${ownerMobile} + ' | E: ' + ${ownerEmail} + ' | W: https://www.vigoiks.no'"/>
+        <img src="" data-th-src="|cid:logo|" style="margin:16px 0;" alt="Vigo IKS logo"/>
+    </p>
+
+</div>
+
+</body>
+
+</html>

@@ -1,5 +1,6 @@
 package no.vigo.azure.ad;
 
+import com.google.gson.JsonElement;
 import com.microsoft.graph.core.ClientException;
 import com.microsoft.graph.http.GraphServiceException;
 import com.microsoft.graph.models.extensions.DirectoryObject;
@@ -115,7 +116,7 @@ public class GroupService extends AzureServiceAbstract {
             return directoryObjects.stream()
                     .map(DirectoryObject::getRawObject)
                     .map(o -> o.get("displayName"))
-                    .map(o -> o.getAsString())
+                    .map(JsonElement::getAsString)
                     .collect(Collectors.toList());
         }
         catch (GraphServiceException e) {

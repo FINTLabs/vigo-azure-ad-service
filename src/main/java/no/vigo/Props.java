@@ -34,6 +34,9 @@ public class Props {
     @Value("${fint.azure.qlik.send-invitation:false}")
     private Boolean qlikSendInvitation;
 
+    @Value("${fint.azure.qlik.synchronize-users:false}")
+    private Boolean qlikSyncronizeUsers;
+
     @Value("${fint.azure.qlik.invitation-message-body:test}")
     private String qlikInvitationMessageBody;
 

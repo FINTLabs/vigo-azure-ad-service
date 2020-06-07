@@ -70,7 +70,7 @@ spec:
             - name: fint.invite.mail.serviceaccount
               value: '/credentials/serviceaccount.json'
             - name: fint.azure.qlik.allowed-domains
-              value: rogfk.no,innlandetfylke.no
+              value: rogfk.no,innlandetfylke.no,mrfylke.no
             - name: fint.azure.qlik.users.owner
               value: hans@vigoiks.no
             - name: fint.azure.qlik.send-invitation

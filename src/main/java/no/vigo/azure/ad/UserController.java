@@ -1,13 +1,14 @@
 package no.vigo.azure.ad;
 
 import com.google.gson.JsonObject;
-import com.microsoft.graph.models.extensions.Invitation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 @RestController
@@ -24,19 +25,5 @@ public class UserController {
     public ResponseEntity<List<JsonObject>> getMyUser(@RequestHeader(name = "x-upn") String upn) {
         List<JsonObject> usersByManager = userService.getUsersByManager(upn);
         return ResponseEntity.ok(usersByManager);
-    }
-
-    @PostMapping("/invite")
-    public ResponseEntity<Invitation> inviteUser(@RequestBody UserInvitation userInvitation) {
-        return ResponseEntity.ok(userService.invite(userInvitation));
-    }
-
-    @PostMapping("/invite/{mail}")
-    public ResponseEntity<Invitation> inviteUser(@PathVariable String mail) {
-        Invitation invitation = userService.reInvite(mail);
-        if (Objects.nonNull(invitation)) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.badRequest().build();
     }
 }
