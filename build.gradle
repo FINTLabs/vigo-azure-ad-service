@@ -2,6 +2,8 @@ plugins {
     id 'org.springframework.boot' version '2.2.6.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'java'
+    id 'groovy'
+
 }
 
 group = 'no.fint'
@@ -53,8 +55,7 @@ dependencies {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
     testImplementation 'io.projectreactor:reactor-test'
-}
-
-test {
-    useJUnitPlatform()
+    testImplementation 'org.spockframework:spock-spring:2.0-M2-groovy-3.0'
+    testImplementation 'org.spockframework:spock-core:2.0-M2-groovy-3.0'
+    testImplementation 'cglib:cglib-nodep:3.3.0'
 }

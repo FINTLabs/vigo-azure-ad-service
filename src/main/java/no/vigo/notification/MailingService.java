@@ -33,7 +33,7 @@ public class MailingService {
         try {
             log.info("Creating email from {} to {} ...", sender, recipient);
             MimeMessage mimeMessage = createEmail(sender, recipient, title, content);
-            Message message = sendMessage("me", mimeMessage);
+            Message message = sendMessage(sender, mimeMessage);
             return message.getId();
         } catch (MessagingException | IOException e) {
             log.error("Unable to send message!", e);
