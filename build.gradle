@@ -32,6 +32,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.retry:spring-retry:1.3.0'
+    implementation 'org.springframework:spring-aspects'
 
     implementation files('libs/ojdbc8.jar')
     implementation 'com.sun.mail:javax.mail:1.6.2'

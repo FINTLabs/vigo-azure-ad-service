@@ -1,7 +1,7 @@
 package no.vigo.azure.ad;
 
+import com.google.gson.JsonElement;
 import com.microsoft.graph.core.ClientException;
-import com.microsoft.graph.http.GraphServiceException;
 import com.microsoft.graph.models.extensions.DirectoryObject;
 import com.microsoft.graph.models.extensions.Group;
 import com.microsoft.graph.options.Option;
@@ -11,6 +11,9 @@ import com.microsoft.graph.requests.extensions.IDirectoryObjectCollectionWithRef
 import com.microsoft.graph.requests.extensions.IGroupCollectionPage;
 import lombok.extern.slf4j.Slf4j;
 import no.vigo.Props;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -98,29 +101,35 @@ public class GroupService extends AzureServiceAbstract {
         }
     }
 
-    public List<String> getGroupNamesByUser(String username) {
-        try {
-            IDirectoryObjectCollectionWithReferencesPage response = graphClient.users(username)
-                    .memberOf()
-                    .buildRequest()
-                    .get();
-            List<DirectoryObject> directoryObjects = new ArrayList<>(response.getCurrentPage());
-            IDirectoryObjectCollectionWithReferencesRequestBuilder nextPage = response.getNextPage();
-            while (nextPage != null) {
-                IDirectoryObjectCollectionWithReferencesPage page = nextPage.buildRequest().get();
-                directoryObjects.addAll(page.getCurrentPage());
-                nextPage = page.getNextPage();
-            }
-
-            return directoryObjects.stream()
-                    .map(DirectoryObject::getRawObject)
-                    .map(o -> o.get("displayName"))
-                    .map(o -> o.getAsString())
-                    .collect(Collectors.toList());
-        }
-        catch (GraphServiceException e) {
-            return Collections.emptyList();
+    @Retryable(value = {ClientException.class},
+            maxAttempts = 10,
+            backoff = @Backoff(delay = 1000))
+    public List<String> getGroupNamesByUser(String id) {
+        log.info("Fetching groups for {}", id);
+        IDirectoryObjectCollectionWithReferencesPage response = graphClient.users(id)
+                .memberOf()
+                .buildRequest()
+                .get();
+        List<DirectoryObject> directoryObjects = new ArrayList<>(response.getCurrentPage());
+        IDirectoryObjectCollectionWithReferencesRequestBuilder nextPage = response.getNextPage();
+        while (nextPage != null) {
+            IDirectoryObjectCollectionWithReferencesPage page = nextPage.buildRequest().get();
+            directoryObjects.addAll(page.getCurrentPage());
+            nextPage = page.getNextPage();
         }
 
+        return directoryObjects.stream()
+                .map(DirectoryObject::getRawObject)
+                .map(o -> o.get("displayName"))
+                .map(JsonElement::getAsString)
+                .collect(Collectors.toList());
+
+
+    }
+
+    @Recover
+    public List<String> recover(ClientException t) {
+        log.error("Unable to get groups {}", t.getMessage());
+        return Collections.emptyList();
     }
 }

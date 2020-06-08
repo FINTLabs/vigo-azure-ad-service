@@ -22,7 +22,6 @@ public class GroupController {
 
     @GetMapping("/{id}")
     public ResponseEntity<List<String>> getGroupById(@PathVariable String id) {
-        log.info("Getting groups for {}", id);
         return ResponseEntity.ok(groupService.getGroupNamesByUser(id));
     }
 }
