@@ -1,22 +1,16 @@
 package no.vigo.azure.ad;
 
 import com.google.gson.JsonElement;
-import com.microsoft.graph.core.ClientException;
+import com.microsoft.graph.http.GraphServiceException;
 import com.microsoft.graph.models.extensions.DirectoryObject;
 import com.microsoft.graph.models.extensions.Group;
+import com.microsoft.graph.models.extensions.IGraphServiceClient;
 import com.microsoft.graph.options.Option;
 import com.microsoft.graph.options.QueryOption;
 import com.microsoft.graph.requests.extensions.IDirectoryObjectCollectionWithReferencesPage;
-import com.microsoft.graph.requests.extensions.IDirectoryObjectCollectionWithReferencesRequestBuilder;
-import com.microsoft.graph.requests.extensions.IGroupCollectionPage;
 import lombok.extern.slf4j.Slf4j;
-import no.vigo.Props;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Recover;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,8 +19,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class GroupService extends AzureServiceAbstract {
-    public GroupService(Props props) {
-        super(props);
+    public GroupService(IGraphServiceClient graphClient) {
+        super(graphClient);
     }
 
 
@@ -34,15 +28,17 @@ public class GroupService extends AzureServiceAbstract {
         LinkedList<Option> requestOptions = new LinkedList<>();
         requestOptions.add(new QueryOption("$filter", "startswith(displayName,'" + value + "_')"));
 
-        IGroupCollectionPage groupCollectionPage = graphClient.groups()
+//        IGroupCollectionPage groupCollectionPage = graphClient.groups()
+//                .buildRequest(requestOptions)
+//                .get();
+//
+//        List<Group> groups = new ArrayList<>(groupCollectionPage.getCurrentPage());
+//        while (groupCollectionPage.getNextPage() != null) {
+//            groups.addAll(groupCollectionPage.getNextPage().buildRequest().get().getCurrentPage());
+//        }
+        return getPagedGroupObjects(graphClient.groups()
                 .buildRequest(requestOptions)
-                .get();
-
-        List<Group> groups = new ArrayList<>(groupCollectionPage.getCurrentPage());
-        while (groupCollectionPage.getNextPage() != null) {
-            groups.addAll(groupCollectionPage.getNextPage().buildRequest().get().getCurrentPage());
-        }
-        return groups;
+                .get());//groups;
     }
 
     public Group getGroupByCountyNumber(String countyNumber) {
@@ -93,43 +89,22 @@ public class GroupService extends AzureServiceAbstract {
         log.debug("Added user to group ({})", response.id);
     }
 
-    public Group getGroupById(String id) {
+    public List<String> getGroupNamesByUser(String username) {
         try {
-            return graphClient.groups(id).buildRequest().get();
-        } catch (ClientException e) {
-            return null;
-        }
-    }
+            IDirectoryObjectCollectionWithReferencesPage response = graphClient.users(username)
+                    .memberOf()
+                    .buildRequest()
+                    .get();
 
-    @Retryable(value = {ClientException.class},
-            maxAttempts = 10,
-            backoff = @Backoff(delay = 1000))
-    public List<String> getGroupNamesByUser(String id) {
-        log.info("Fetching groups for {}", id);
-        IDirectoryObjectCollectionWithReferencesPage response = graphClient.users(id)
-                .memberOf()
-                .buildRequest()
-                .get();
-        List<DirectoryObject> directoryObjects = new ArrayList<>(response.getCurrentPage());
-        IDirectoryObjectCollectionWithReferencesRequestBuilder nextPage = response.getNextPage();
-        while (nextPage != null) {
-            IDirectoryObjectCollectionWithReferencesPage page = nextPage.buildRequest().get();
-            directoryObjects.addAll(page.getCurrentPage());
-            nextPage = page.getNextPage();
+            return getPagedDirectoryObjects(response).stream()
+                    .map(DirectoryObject::getRawObject)
+                    .map(o -> o.get("displayName"))
+                    .map(JsonElement::getAsString)
+                    .collect(Collectors.toList());
+
+        } catch (GraphServiceException e) {
+            return Collections.emptyList();
         }
 
-        return directoryObjects.stream()
-                .map(DirectoryObject::getRawObject)
-                .map(o -> o.get("displayName"))
-                .map(JsonElement::getAsString)
-                .collect(Collectors.toList());
-
-
-    }
-
-    @Recover
-    public List<String> recover(ClientException t) {
-        log.error("Unable to get groups {}", t.getMessage());
-        return Collections.emptyList();
     }
 }

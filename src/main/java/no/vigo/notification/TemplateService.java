@@ -15,14 +15,14 @@ public class TemplateService {
         this.templateEngine = templateEngine;
     }
 
-    public String render(String fornavn, String registrationUrl, User owner) {
+    public String render(String firstName, String registrationUrl, User owner, String template) {
         Context context = new Context();
 
-        context.setVariable("consultantFullname", fornavn);
+        context.setVariable("consultantFullname", firstName);
         context.setVariable("registrationUrl", registrationUrl);
         context.setVariable("ownerFullname", owner.displayName);
         context.setVariable("ownerEmail", owner.mail);
         context.setVariable("ownerMobile", owner.mobilePhone);
-        return templateEngine.process("email-template", context);
+        return templateEngine.process(template, context);
     }
 }

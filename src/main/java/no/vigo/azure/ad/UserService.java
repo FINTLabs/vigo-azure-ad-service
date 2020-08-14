@@ -2,28 +2,23 @@ package no.vigo.azure.ad;
 
 import com.google.gson.JsonObject;
 import com.microsoft.graph.core.ClientException;
-import com.microsoft.graph.http.GraphServiceException;
 import com.microsoft.graph.models.extensions.DirectoryObject;
+import com.microsoft.graph.models.extensions.IGraphServiceClient;
 import com.microsoft.graph.models.extensions.Invitation;
-import com.microsoft.graph.models.extensions.InvitedUserMessageInfo;
 import com.microsoft.graph.models.extensions.User;
 import com.microsoft.graph.requests.extensions.IDirectoryObjectCollectionWithReferencesPage;
-import com.microsoft.graph.requests.extensions.IDirectoryObjectCollectionWithReferencesRequestBuilder;
 import lombok.extern.slf4j.Slf4j;
-import no.vigo.Props;
 import no.vigo.azure.exception.AzureADUserNotFound;
-import no.vigo.provisioning.qlik.QLikUser;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class UserService extends AzureServiceAbstract {
-    public UserService(Props props) {
-        super(props);
+    public UserService(IGraphServiceClient graphClient) {
+        super(graphClient);
     }
 
     public void updateUser(User user, String id) {
@@ -45,21 +40,13 @@ public class UserService extends AzureServiceAbstract {
     public User usersExists(String id) throws AzureADUserNotFound {
         try {
             return graphClient.users(id).buildRequest().get();
-        } catch (GraphServiceException e) {
+        } catch (ClientException e) {
             throw new AzureADUserNotFound();
         }
     }
 
     public List<DirectoryObject> getMemberOf(String id) {
-        IDirectoryObjectCollectionWithReferencesPage groupCollectionPage = graphClient.users(id).memberOf().buildRequest().get();
-
-        List<DirectoryObject> groups = new ArrayList<>(groupCollectionPage.getCurrentPage());
-        while (groupCollectionPage.getNextPage() != null) {
-            groups.addAll(groupCollectionPage.getNextPage().buildRequest().get().getCurrentPage());
-        }
-
-        return groups;
-
+        return getPagedDirectoryObjects(graphClient.users(id).memberOf().buildRequest().get());
     }
 
     public List<JsonObject> getUsersByManager(String managerUpn) {
@@ -69,21 +56,13 @@ public class UserService extends AzureServiceAbstract {
                 .buildRequest()
                 .get();
 
-        List<DirectoryObject> directoryObjects = new ArrayList<>(response.getCurrentPage());
-        IDirectoryObjectCollectionWithReferencesRequestBuilder nextPage = response.getNextPage();
-        while (nextPage != null) {
-            IDirectoryObjectCollectionWithReferencesPage page = nextPage.buildRequest().get();
-            directoryObjects.addAll(page.getCurrentPage());
-            nextPage = page.getNextPage();
-        }
-
-
-        return directoryObjects.stream()
+        return getPagedDirectoryObjects(response).stream()
                 .map(DirectoryObject::getRawObject)
                 .collect(Collectors.toList());
     }
 
-    private Invitation invite(Invitation invitation, String manager) {
+
+    public Invitation invite(Invitation invitation, String manager) {
         try {
             Invitation invitationResponse = graphClient.invitations()
                     .buildRequest()
@@ -99,36 +78,12 @@ public class UserService extends AzureServiceAbstract {
         }
     }
 
-    public Invitation invite(QLikUser qLikUser, String manager) {
-        Invitation invitation = new Invitation();
-        invitation.invitedUserEmailAddress = qLikUser.getEmail().toLowerCase();
-        invitation.inviteRedirectUrl = props.getQlikRedirectUrl();
-        invitation.invitedUserDisplayName = String.format("%s %s", qLikUser.getFirstName(), qLikUser.getLastName());
-        invitation.sendInvitationMessage = props.getQlikSendInvitation();
-        InvitedUserMessageInfo invitedUserMessageInfo = new InvitedUserMessageInfo();
-        invitedUserMessageInfo.customizedMessageBody = props.getQlikInvitationMessageBody();
-        invitedUserMessageInfo.messageLanguage = "no";
-        invitation.invitedUserMessageInfo = invitedUserMessageInfo;
-
-        return invite(invitation, manager);
-    }
-
-    public Invitation invite(UserInvitation userInvitation) {
-        Invitation invitation = new Invitation();
-        invitation.invitedUserEmailAddress = userInvitation.getEmail();
-        invitation.inviteRedirectUrl = userInvitation.getApplicationUrl();
-        invitation.invitedUserDisplayName = String.format("%s %s", userInvitation.getFirstName(), userInvitation.getLastName());
-
-        return invite(invitation, userInvitation.getOwner());
-    }
-
-    public Invitation reInvite(String email) {
+    public Invitation reInvite(String email, String inviteRedirectUrl) {
         Invitation invitation = new Invitation();
 
         try {
             invitation.invitedUserEmailAddress = email;
-            invitation.inviteRedirectUrl = "https://qs.fintlabs.no";
-            invitation.sendInvitationMessage = true;
+            invitation.inviteRedirectUrl = inviteRedirectUrl;
 
             return graphClient.invitations()
                     .buildRequest()

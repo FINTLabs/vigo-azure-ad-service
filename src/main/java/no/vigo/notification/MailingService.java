@@ -29,11 +29,11 @@ public class MailingService {
         this.sender = sender;
     }
 
-    public String send(String content, String recipient) {
+    public String send(String title, String content, String recipient) {
         try {
             log.info("Creating email from {} to {} ...", sender, recipient);
-            MimeMessage mimeMessage = createEmail(sender, recipient, "Velkommen som konsulent hos Vigo IKS", content);
-            Message message = sendMessage("me", mimeMessage);
+            MimeMessage mimeMessage = createEmail(sender, recipient, title, content);
+            Message message = sendMessage(sender, mimeMessage);
             return message.getId();
         } catch (MessagingException | IOException e) {
             log.error("Unable to send message!", e);

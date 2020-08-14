@@ -1,4 +1,4 @@
-FROM fintlabs.azurecr.io/vigo-azure-ad-frontend:latest as client
+FROM fintlabsacr.azurecr.io/vigo-azure-ad-frontend:latest as client
 
 FROM gradle:6.3.0-jdk8 as builder
 USER root

@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-aks-alpha
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
   labels:
     io.kompose.service: vigo-azure-ad-service
   name: vigo-azure-ad-service
@@ -10,7 +10,6 @@ spec:
   ports:
     - name: "8080"
       port: 8080
-  loadBalancerIP: 51.120.76.224
   type: LoadBalancer
   selector:
     io.kompose.service: vigo-azure-ad-service
@@ -35,15 +34,13 @@ spec:
       labels:
         io.kompose.service: vigo-azure-ad-service
     spec:
-      imagePullSecrets:
-        - name: acr-fintlabs-iktagder
       volumes:
         - name: credentials
           secret:
             secretName: google-gmail-serviceaccount
       containers:
         - name: vigo-azure-ad-service
-          image: fintlabs.azurecr.io/vigo-azure-ad-service:build.17
+          image: fintlabsacr.azurecr.io/vigo-azure-ad-service:build.17
           volumeMounts:
             - mountPath: /credentials
               name: credentials
@@ -70,7 +67,7 @@ spec:
             - name: fint.invite.mail.serviceaccount
               value: '/credentials/serviceaccount.json'
             - name: fint.azure.qlik.allowed-domains
-              value: rogfk.no,innlandetfylke.no,mrfylke.no
+              value: rogfk.no,innlandetfylke.no,mrfylke.no,vtfk.no
             - name: fint.azure.qlik.users.owner
               value: hans@vigoiks.no
             - name: fint.azure.qlik.send-invitation

@@ -5,10 +5,10 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class QlikUserMapper implements RowMapper<QLikUser> {
+public class QlikUserMapper implements RowMapper<QlikUser> {
     @Override
-    public QLikUser mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return QLikUser.builder()
+    public QlikUser mapRow(ResultSet rs, int rowNum) throws SQLException {
+        return QlikUser.builder()
                 .countyNumber(rs.getString(CBrukerFields.FYLKESNR))
                 .firstName(rs.getString(CBrukerFields.FORNAVN))
                 .lastName(rs.getString(CBrukerFields.ETTERNAVN))
