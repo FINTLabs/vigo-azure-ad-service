@@ -1,6 +1,7 @@
 package no.vigo.azure.ad;
 
 import com.google.gson.JsonElement;
+import com.microsoft.graph.http.GraphServiceException;
 import com.microsoft.graph.models.extensions.DirectoryObject;
 import com.microsoft.graph.models.extensions.Group;
 import com.microsoft.graph.models.extensions.IGraphServiceClient;
