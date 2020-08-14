@@ -4,7 +4,6 @@ plugins {
     id 'java'
     id 'groovy'
 }
-//apply plugin: 'groovy'
 
 group = 'no.fint'
 version = '0.0.1-SNAPSHOT'

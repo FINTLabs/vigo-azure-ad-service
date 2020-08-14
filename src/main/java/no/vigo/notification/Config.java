@@ -27,7 +27,7 @@ public class Config {
     public Credentials credentials(
             @Value("${fint.invite.mail.serviceaccount:serviceaccount.json}") Path serviceAccount,
             @Value("${fint.orgmonitor.gmail.scopes:https://www.googleapis.com/auth/gmail.send}") String[] scopes,
-            @Value("${fint.orgmonitor.gmail.delegate:asgeir@fintlabs.no}") String delegate
+            @Value("${fint.orgmonitor.gmail.delegate:no-reply@fintlabs.no}") String delegate
     ) throws IOException {
         InputStream in = Files.newInputStream(serviceAccount);
         return ServiceAccountCredentials.fromStream(in).createScoped(scopes).createDelegated(delegate);
