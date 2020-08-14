@@ -15,7 +15,7 @@
 | fint.azure.qlik.allowed-domains |  | |
 | fint.invite.mail.serviceaccount | serviceaccount.json | |
 | fint.orgmonitor.gmail.scopes | https | |
-| fint.orgmonitor.gmail.delegate | frode@fintlabs.no | |
+| fint.orgmonitor.gmail.delegate | no-reploy@fintlabs.no | |
 | fint.orgmonitor.application-name | JADA | |
 
 
