@@ -5,14 +5,18 @@ import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.Message;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -62,18 +66,20 @@ public class MailingService {
                 new InternetAddress(to));
         email.setSubject(subject);
         htmlPart.setText(bodyText, "UTF-8", "html");
+        content.addBodyPart(htmlPart);
 
         MimeBodyPart imagePart = new MimeBodyPart();
         try {
-            imagePart.attachFile(new ClassPathResource("static/logo.png").getFile());
+            //DataSource ds = new FileDataSource(new ClassPathResource("static/logo.png").getFile());
+            DataSource ds = new ByteArrayDataSource(new ClassPathResource("static/logo.png").getInputStream(), MediaType.IMAGE_PNG_VALUE);
+            imagePart.setDataHandler(new DataHandler(ds));
+            imagePart.setFileName("logo.png");
+            imagePart.setContentID("<logo>");
+            imagePart.setDisposition(MimeBodyPart.INLINE);
+            content.addBodyPart(imagePart);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.warn("Unable to attach logo image", e);
         }
-        imagePart.setContentID("<logo>");
-        imagePart.setDisposition(MimeBodyPart.INLINE);
-
-        content.addBodyPart(htmlPart);
-        content.addBodyPart(imagePart);
 
         email.setContent(content);
 
