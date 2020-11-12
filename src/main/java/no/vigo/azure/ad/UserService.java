@@ -2,13 +2,16 @@ package no.vigo.azure.ad;
 
 import com.google.gson.JsonObject;
 import com.microsoft.graph.core.ClientException;
+import com.microsoft.graph.http.GraphServiceException;
 import com.microsoft.graph.models.extensions.DirectoryObject;
 import com.microsoft.graph.models.extensions.IGraphServiceClient;
 import com.microsoft.graph.models.extensions.Invitation;
 import com.microsoft.graph.models.extensions.User;
 import com.microsoft.graph.requests.extensions.IDirectoryObjectCollectionWithReferencesPage;
 import lombok.extern.slf4j.Slf4j;
-import no.vigo.azure.exception.AzureADUserNotFound;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,12 +40,31 @@ public class UserService extends AzureServiceAbstract {
                 .delete();
     }
 
-    public User usersExists(String id) throws AzureADUserNotFound {
+    @Retryable(value = {ClientException.class},
+            maxAttempts = 10,
+            backoff = @Backoff(delay = 1000))
+    public AzureUserResponse usersExists(String id) {
+        AzureUserResponse azureUserResponse = new AzureUserResponse();
         try {
-            return graphClient.users(id).buildRequest().get();
-        } catch (ClientException e) {
-            throw new AzureADUserNotFound();
+            User user = graphClient.users(id).buildRequest().get();
+            azureUserResponse.setUser(user);
+            azureUserResponse.setResponseCode(200);
+            return azureUserResponse;
+        } catch (GraphServiceException e) {
+            if (e.getResponseCode() == 404) {
+                azureUserResponse.setResponseCode(e.getResponseCode());
+                return azureUserResponse;
+            }
+            throw e;
         }
+    }
+
+    @Recover
+    public AzureUserResponse recover(ClientException t) {
+        log.error("Unable to get user {}", t.getMessage());
+        AzureUserResponse response = new AzureUserResponse();
+        response.setResponseCode(400);
+        return response;
     }
 
     public List<DirectoryObject> getMemberOf(String id) {

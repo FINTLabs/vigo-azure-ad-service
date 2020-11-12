@@ -5,9 +5,9 @@ import com.microsoft.graph.models.extensions.Invitation;
 import com.microsoft.graph.models.extensions.User;
 import lombok.extern.slf4j.Slf4j;
 import no.vigo.Props;
+import no.vigo.azure.ad.AzureUserResponse;
 import no.vigo.azure.ad.GroupService;
 import no.vigo.azure.ad.UserService;
-import no.vigo.azure.exception.AzureADUserNotFound;
 import no.vigo.notification.MailingService;
 import no.vigo.notification.TemplateService;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -59,9 +59,17 @@ public class QlikUserService {
             List<QlikUser> qlikUsers = jdbcTemplate.query(sql, new QlikUserMapper());
             log.info("Found {} QLik users to provisioning", qlikUsers.size());
             qlikUsers.forEach(qlikUser -> {
-                try {
-                    User user = userService.usersExists(qlikUser.getAzureADUPN());
+                AzureUserResponse response = userService.usersExists(qlikUser.getAzureADUPN());
 
+                if (response.notExists()) {
+                    if (shouldUserExist(qlikUser)) {
+                        if (!props.getDryRun()) invite(qlikUser);
+                    }
+                    return;
+                }
+                if (response.hasError()) return;
+
+                response.withUser(user -> {
                     if (shouldUserExist(qlikUser)) {
                         log.trace("Updating user {}", qlikUser.getEmail());
                         userService.updateUser(getPatchedUser(qlikUser), qlikUser.getAzureADUPN());
@@ -81,15 +89,11 @@ public class QlikUserService {
                         userService.deleteUser(user.id);
 
                     }
-                } catch (AzureADUserNotFound e) {
-                    if (shouldUserExist(qlikUser)) {
-                        invite(qlikUser);
-                    }
-                }
+                });
+
             });
             log.info("End provisioning users");
-        }
-        else {
+        } else {
             log.info("Provisioning users is disabled.");
         }
     }
@@ -117,7 +121,7 @@ public class QlikUserService {
     }
 
     private void notify(String firstName, String email, String inviteRedeemUrl) {
-        if(props.getQlikSendInvitation()) {
+        if (props.getQlikSendInvitation()) {
             String render = templateService.render(
                     firstName,
                     inviteRedeemUrl,

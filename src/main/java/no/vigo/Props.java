@@ -43,4 +43,7 @@ public class Props {
     @Value("${fint.azure.qlik.allowed-domains}")
     private List<String> allowedDomains;
 
+    @Value("${fint.azure.qlik.dry-run:true}")
+    private Boolean dryRun;
+
 }
