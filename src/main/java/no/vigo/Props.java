@@ -46,4 +46,6 @@ public class Props {
     @Value("${fint.azure.qlik.dry-run:true}")
     private Boolean dryRun;
 
+    @Value("$fint.azure.qlik.user-delete:true")
+    private Boolean userDelete;
 }
