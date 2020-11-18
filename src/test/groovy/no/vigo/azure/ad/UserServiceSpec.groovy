@@ -1,14 +1,13 @@
 package no.vigo.azure.ad
 
 import com.google.gson.JsonObject
-import com.microsoft.graph.core.ClientException
 import com.microsoft.graph.http.CustomRequest
+import com.microsoft.graph.http.GraphServiceException
 import com.microsoft.graph.models.extensions.DirectoryObject
 import com.microsoft.graph.models.extensions.IGraphServiceClient
 import com.microsoft.graph.models.extensions.Invitation
 import com.microsoft.graph.models.extensions.User
 import com.microsoft.graph.requests.extensions.*
-import no.vigo.azure.exception.AzureADUserNotFound
 import spock.lang.Specification
 
 class UserServiceSpec extends Specification {
@@ -49,14 +48,14 @@ class UserServiceSpec extends Specification {
         1 * graphClient.users(_ as String).buildRequest().delete()
     }
 
-    def "User exists should throw exception if not found"() {
+    def "User registered as Qlik user should return 404 if not found in Azure"() {
         when:
         def user = userService.usersExists(id)
 
         then:
-        1 * graphClient.users(_ as String).buildRequest().get() >> { throw new ClientException("User not found", new Throwable()) }
-        !user
-        thrown(AzureADUserNotFound)
+        1 * graphClient.users(_ as String).buildRequest().get() >> { throw new GraphServiceException("GET" ,"url", [], "", 404, "user not found", [],null, true) }
+        !user.user
+        user.responseCode == 404
     }
 
     def "User exists should not throw exception if found"() {
@@ -65,7 +64,7 @@ class UserServiceSpec extends Specification {
 
         then:
         1 * graphClient.users(_ as String).buildRequest().get() >> new User(id: "test")
-        user.id == "test"
+        user.user.id == "test"
         noExceptionThrown()
     }
 
