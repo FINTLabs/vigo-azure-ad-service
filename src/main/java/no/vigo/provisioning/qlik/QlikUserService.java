@@ -87,9 +87,8 @@ public class QlikUserService {
                     } else {
                         if (props.getUserDelete()) {
                             log.info("Deleting user {}", user.mail);
+                            userService.deleteUser(user.id);
                         }
-                        userService.deleteUser(user.id);
-
                     }
                 });
 
