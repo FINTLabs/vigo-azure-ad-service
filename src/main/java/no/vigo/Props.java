@@ -37,13 +37,12 @@ public class Props {
     @Value("${fint.azure.qlik.synchronize-users:false}")
     private Boolean qlikSyncronizeUsers;
 
-    //@Value("${fint.azure.qlik.invitation-message-body:test}")
-    //private String qlikInvitationMessageBody;
-
     @Value("${fint.azure.qlik.allowed-domains}")
     private List<String> allowedDomains;
 
     @Value("${fint.azure.qlik.dry-run:true}")
     private Boolean dryRun;
 
+    @Value("${fint.azure.qlik.user-delete:true}")
+    private Boolean userDelete;
 }

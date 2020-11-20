@@ -85,9 +85,10 @@ public class QlikUserService {
                             removeNotNeededGroups(hasGroups, neededGroups, user.id);
                         }
                     } else {
-                        log.info("Deleting user {}", user.mail);
-                        userService.deleteUser(user.id);
-
+                        if (props.getUserDelete()) {
+                            log.info("Deleting user {}", user.mail);
+                            userService.deleteUser(user.id);
+                        }
                     }
                 });
 
