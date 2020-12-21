@@ -13,7 +13,9 @@ import no.vigo.notification.TemplateService;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -113,7 +115,7 @@ public class QlikUserService {
 
     public Invitation reInvite(String email) {
         Invitation invite = userService.reInvite(email, props.getQlikRedirectUrl());
-        User user = userService.getUserIdByEmail(email);
+        User user = userService.getUserIdByEmail(getUPNByEmail(email));
         notify(user.givenName, email, invite.inviteRedeemUrl);
 
         return invite;
@@ -233,6 +235,16 @@ public class QlikUserService {
         user.department = qLikUser.getCountyNumber();
 
         return user;
+    }
+
+    private String getUPNByEmail(String email){
+        return UriUtils.encode(
+                String.format(
+                        "%s#EXT#@vigoiks.onmicrosoft.com",
+                        email.replace("@", "_")
+                ),
+                StandardCharsets.UTF_8.toString()
+        );
     }
 }
 
