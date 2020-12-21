@@ -28,7 +28,7 @@ public class Props {
     @Value("${fint.azure.qlik.users.owner:hans@vigoiks.no}")
     private String qlikUsersOwner;
 
-    @Value("${fint.azure.qlik.redirect-url:https://qlik.fintlabs.no}")
+    @Value("${fint.azure.qlik.redirect-url:https://qlik.vigoiks.no/}")
     private String qlikRedirectUrl;
 
     @Value("${fint.azure.qlik.send-invitation:false}")
