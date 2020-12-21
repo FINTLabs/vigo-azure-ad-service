@@ -29,11 +29,6 @@ public class QlikInvitationController {
         return ResponseEntity.ok(usersByManager);
     }
 
-    @PostMapping("/invite")
-    public ResponseEntity<Invitation> inviteUser(@RequestBody QlikUser qlikUser) {
-        return ResponseEntity.ok(qlikUserService.invite(qlikUser));
-    }
-
     @PostMapping("/invite/{mail}")
     public ResponseEntity<Invitation> inviteUser(@PathVariable String mail) {
         Invitation invitation = qlikUserService.reInvite(mail);
