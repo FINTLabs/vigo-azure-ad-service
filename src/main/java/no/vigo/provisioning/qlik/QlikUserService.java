@@ -63,7 +63,7 @@ public class QlikUserService {
 
                 if (response.notExists()) {
                     if (shouldUserExist(qlikUser)) {
-                        if (!props.getDryRun()) invite(qlikUser);
+                        if (!props.getDryRun()) makeAzureADUser(qlikUser);
                     }
                     return;
                 }
@@ -99,18 +99,16 @@ public class QlikUserService {
         }
     }
 
-    public Invitation invite(QlikUser qLikUser) {
-        log.info("Inviting user {}", qLikUser.getEmail());
+    public Invitation makeAzureADUser(QlikUser qLikUser) {
+        log.info("Creating user {}", qLikUser.getEmail());
 
         Invitation invitation = new Invitation();
         invitation.invitedUserEmailAddress = qLikUser.getEmail().toLowerCase();
+        invitation.sendInvitationMessage = false;
         invitation.inviteRedirectUrl = props.getQlikRedirectUrl();
         invitation.invitedUserDisplayName = String.format("%s %s", qLikUser.getFirstName(), qLikUser.getLastName());
 
-        Invitation invite = userService.invite(invitation, props.getQlikUsersOwner());
-        notify(qLikUser.getFirstName(), qLikUser.getEmail(), invite.inviteRedeemUrl);
-
-        return invite;
+        return userService.invite(invitation, props.getQlikUsersOwner());
     }
 
     public Invitation reInvite(String email) {
