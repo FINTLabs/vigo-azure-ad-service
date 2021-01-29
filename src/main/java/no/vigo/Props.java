@@ -25,7 +25,7 @@ public class Props {
     @Value("${fint.azure.invite.base-url:http://localhost:8080/api/inviation?t=}")
     private String baseUrl;
 
-    @Value("${fint.azure.qlik.users.owner:hans@vigoiks.no}")
+    @Value("${fint.azure.qlik.users.owner:ranveig@vigoiks.no}")
     private String qlikUsersOwner;
 
     @Value("${fint.azure.qlik.redirect-url:https://qlik.vigoiks.no/}")
