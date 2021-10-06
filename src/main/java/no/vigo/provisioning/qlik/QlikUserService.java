@@ -204,8 +204,13 @@ public class QlikUserService {
                 .map(groupService::getAccessGroup)
                 .map(group -> group.id)
                 .collect(Collectors.toList());
-        String groupByCountyNumber = groupService.getGroupByCountyNumber(qLikUser.getCountyNumber()).id;
-        neededGroupIds.add(groupByCountyNumber);
+
+        Group groupByCountyNumber = groupService.getGroupByCountyNumber(qLikUser.getCountyNumber());
+        if (groupByCountyNumber == null) {
+            log.error("County number {} is missing mandatory groups", qLikUser.getCountyNumber());
+        } else {
+            neededGroupIds.add(groupByCountyNumber.id);
+        }
 
         return neededGroupIds;
 
@@ -237,7 +242,7 @@ public class QlikUserService {
         return user;
     }
 
-    private String getUPNByEmail(String email){
+    private String getUPNByEmail(String email) {
         return UriUtils.encode(
                 String.format(
                         "%s#EXT#@vigoiks.onmicrosoft.com",
