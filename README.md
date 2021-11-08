@@ -16,7 +16,7 @@
 | fint.invite.mail.serviceaccount | serviceaccount.json | |
 | fint.orgmonitor.gmail.scopes | https | |
 | fint.orgmonitor.gmail.delegate |  | no-reploy@fintlabs.no |
-| fint.orgmonitor.application-name | JADA | |
+| fint.orgmonitor.application-name | vigo-azure-ad-service | |
 
 
 # Help full commands
