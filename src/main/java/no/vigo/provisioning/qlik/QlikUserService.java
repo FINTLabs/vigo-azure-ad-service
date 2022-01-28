@@ -216,7 +216,8 @@ public class QlikUserService {
 
     }
 
-    private final Supplier<Predicate<Group>> excludeDynamicGroups = () -> group -> !group.groupTypes.contains("DynamicMembership");
+    private final Supplier<Predicate<Group>> excludeDynamicGroups = () -> group -> !group
+            .groupTypes.stream().anyMatch(s -> s.contains("DynamicMembership") || s.contains("Unified"));
 
     private List<String> getHasGroups(QlikUser qLikUser) {
         List<Group> memberOf = userService.getMemberOf(qLikUser.getAzureADUPN())
