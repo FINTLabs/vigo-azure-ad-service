@@ -216,13 +216,13 @@ public class QlikUserService {
 
     }
 
-    private final Supplier<Predicate<Group>> excludeDynamicGroups = () -> group -> !group.groupTypes.contains("DynamicMembership");
+    private final Supplier<Predicate<Group>> includeGroups = () -> group -> group.groupTypes.size() == 0 && !group.mailEnabled;
 
     private List<String> getHasGroups(QlikUser qLikUser) {
         List<Group> memberOf = userService.getMemberOf(qLikUser.getAzureADUPN())
                 .stream()
                 .map(o -> userService.getSerializer().deserializeObject(o.getRawObject().toString(), Group.class))
-                .filter(excludeDynamicGroups.get())
+                .filter(includeGroups.get())
                 .collect(Collectors.toList());
 
         return memberOf.stream()
