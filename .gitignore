@@ -33,3 +33,4 @@ out/
 
 /serviceaccount.json
 /bin/
+.DS_Store
