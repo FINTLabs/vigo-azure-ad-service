@@ -6,6 +6,14 @@ metadata:
 spec:
   itemPath: "vaults/aks-api-vault/items/vigo-azure-ad-service"
 ---
+apiVersion: onepassword.com/v1
+kind: OnePasswordItem
+metadata:
+  name: google-gmail-serviceaccount
+  labels:
+spec:
+  itemPath: "vaults/aks-api-vault/items/google-gmail-serviceaccount"
+---
 apiVersion: v1
 kind: Service
 metadata:
