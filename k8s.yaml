@@ -56,6 +56,7 @@ spec:
             secretName: google-gmail-serviceaccount
       containers:
         - name: vigo-azure-ad-service
+          imagePullPolicy: Always
           image: fintlabsacr.azurecr.io/vigo-azure-ad-service:dummy
           volumeMounts:
             - mountPath: /credentials
