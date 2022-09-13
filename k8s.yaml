@@ -70,7 +70,7 @@ spec:
               path: /actuator/health
           resources:
             limits:
-              memory: "2Gi"
+              memory: "3Gi"
               cpu: "2"
             requests:
               cpu: "100m"
@@ -79,7 +79,7 @@ spec:
             - secretRef:
                 name: vigo-azure-ad-service
           env:
-            - {name: JAVA_TOOL_OPTIONS, value: '-XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -Xmx16G -verbose:gc'}
+            - {name: JAVA_TOOL_OPTIONS, value: '-XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -Xmx2G -verbose:gc'}
             - name: fint.invite.mail.serviceaccount
               value: '/credentials/serviceaccount.json'
             - name: fint.azure.qlik.allowed-domains
