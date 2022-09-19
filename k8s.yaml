@@ -71,8 +71,8 @@ spec:
               path: /actuator/health
           resources:
             limits:
-              memory: "3Gi"
-              cpu: "2"
+              memory: "2Gi"
+              cpu: "1"
             requests:
               cpu: "100m"
               memory: "256Mi"
