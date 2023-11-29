@@ -84,7 +84,7 @@ spec:
             - name: fint.invite.mail.serviceaccount
               value: '/credentials/serviceaccount.json'
             - name: fint.azure.qlik.allowed-domains
-              value: rogfk.no,trondelagfylke.no,agderfk.no,viken.no,oslo.kommune.no,mrfylke.no,nfk.no,tffk.no,vlfk.no,vtfk.no,innlandetfylke.no,.vgs.no,osloskolen.no,ist.com
+              value: ofk.no,afk.no,bfk.no,vestfoldfylke.no,telemarkfylke.no,rogfk.no,trondelagfylke.no,agderfk.no,viken.no,oslo.kommune.no,mrfylke.no,nfk.no,tffk.no,vlfk.no,vtfk.no,innlandetfylke.no,.vgs.no,osloskolen.no,ist.com
             - name: fint.azure.qlik.users.owner
               value: vigo_azure_manager@vigoiks.no
             - name: fint.azure.qlik.send-invitation

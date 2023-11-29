@@ -52,9 +52,7 @@ public class QlikUserService {
             log.info("Start provisioning users");
             log.debug("Fetching users from VIGOS");
             String sql = "select * from CBRUKER\n" +
-                    "where ACCQVV = 'J'\n" +
-                    "or ACCQVD = 'J'\n" +
-                    "or ACCQSV = 'J'\n" +
+                    "where ACCQSV = 'J'\n" +
                     "or ACCQSD = 'J'\n" +
                     "or ACCNPD = 'J'\n" +
                     "or ACCNPV = 'J'";
@@ -151,9 +149,7 @@ public class QlikUserService {
     }
 
     private Boolean hasAccess(QlikUser qLikUser) {
-        boolean hasAccess = qLikUser.getQlikViewRead() ||
-                qLikUser.getQlikViewDeveloper() ||
-                qLikUser.getQlikSenseRead() ||
+        boolean hasAccess = qLikUser.getQlikSenseRead() ||
                 qLikUser.getQlikSenseDeveloper() ||
                 qLikUser.getNPrintRead() ||
                 qLikUser.getNPrintDeveloper();
@@ -197,8 +193,6 @@ public class QlikUserService {
         }
         if (qLikUser.getQlikSenseDeveloper()) groups.add(CBrukerFields.QLIK_SENSE_DEVELOPER);
         if (qLikUser.getQlikSenseRead()) groups.add(CBrukerFields.QLIK_SENSE_READ);
-        if (qLikUser.getQlikViewDeveloper()) groups.add(CBrukerFields.QLIK_VIEW_DEVELOPER);
-        if (qLikUser.getQlikViewRead()) groups.add(CBrukerFields.QLIK_VIEW_READ);
 
         List<String> neededGroupIds = groups.stream()
                 .map(groupService::getAccessGroup)

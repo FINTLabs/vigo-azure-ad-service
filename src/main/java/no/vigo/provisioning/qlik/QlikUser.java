@@ -19,8 +19,6 @@ public class QlikUser {
     @Expose
     private String email;
     private String mobile;
-    private Boolean qlikViewRead;
-    private Boolean qlikViewDeveloper;
     private Boolean qlikSenseDeveloper;
     private Boolean qlikSenseRead;
     private Boolean nPrintDeveloper;
