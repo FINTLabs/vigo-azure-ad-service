@@ -39,8 +39,8 @@ dependencies {
     implementation files('libs/ojdbc8.jar')
     implementation 'com.sun.mail:javax.mail:1.6.2'
 
-    implementation 'com.microsoft.graph:microsoft-graph:1.9.0'
-    implementation 'com.microsoft.graph:microsoft-graph-auth:0.2.0'
+    implementation 'com.microsoft.graph:microsoft-graph:5.80.0'
+    implementation 'com.microsoft.graph:microsoft-graph-auth:0.3.0'
 
     implementation 'no.rogfk:jwt-spring-boot:0.0.14'
 
