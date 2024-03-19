@@ -2,8 +2,7 @@ package no.vigo.azure.ad;
 
 import com.microsoft.graph.auth.confidentialClient.ClientCredentialProvider;
 import com.microsoft.graph.auth.enums.NationalCloud;
-import com.microsoft.graph.models.extensions.IGraphServiceClient;
-import com.microsoft.graph.requests.extensions.GraphServiceClient;
+import com.microsoft.graph.requests.GraphServiceClient;
 import no.vigo.Props;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,12 +26,12 @@ public class AzureServiceConfig {
     }
 
     @Bean
-    public IGraphServiceClient getIGraphServiceClient() {
-        IGraphServiceClient graphClient = GraphServiceClient
+    public GraphServiceClient getGraphServiceClient() {
+        GraphServiceClient graphClient = GraphServiceClient
                 .builder()
                 .authenticationProvider(getClientCredentialProvider())
                 .buildClient();
-        graphClient.setServiceRoot("https://graph.microsoft.com/beta");
+        graphClient.setServiceRoot("https://graph.microsoft.com/.default");
 
         return graphClient;
     }

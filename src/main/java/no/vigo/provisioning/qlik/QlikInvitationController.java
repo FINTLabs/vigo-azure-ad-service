@@ -1,7 +1,7 @@
 package no.vigo.provisioning.qlik;
 
 import com.google.gson.JsonObject;
-import com.microsoft.graph.models.extensions.Invitation;
+import com.microsoft.graph.models.Invitation;
 import lombok.extern.slf4j.Slf4j;
 import no.vigo.azure.ad.UserService;
 import org.springframework.http.ResponseEntity;

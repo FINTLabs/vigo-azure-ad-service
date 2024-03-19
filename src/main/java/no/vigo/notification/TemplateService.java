@@ -1,6 +1,6 @@
 package no.vigo.notification;
 
-import com.microsoft.graph.models.extensions.User;
+import com.microsoft.graph.models.User;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;

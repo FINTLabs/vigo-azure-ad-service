@@ -1,6 +1,6 @@
 package no.vigo.azure.ad;
 
-import com.microsoft.graph.models.extensions.User;
+import com.microsoft.graph.models.User;
 import lombok.Data;
 
 import java.util.function.Consumer;

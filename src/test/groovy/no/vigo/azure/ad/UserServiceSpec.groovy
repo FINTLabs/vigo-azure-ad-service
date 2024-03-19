@@ -1,32 +1,33 @@
 package no.vigo.azure.ad
 
 import com.google.gson.JsonObject
+import com.microsoft.graph.core.CustomRequestBuilder
 import com.microsoft.graph.http.CustomRequest
 import com.microsoft.graph.http.GraphServiceException
-import com.microsoft.graph.models.extensions.DirectoryObject
-import com.microsoft.graph.models.extensions.IGraphServiceClient
-import com.microsoft.graph.models.extensions.Invitation
-import com.microsoft.graph.models.extensions.User
-import com.microsoft.graph.requests.extensions.*
+import com.microsoft.graph.models.DirectoryObject
+import com.microsoft.graph.requests.GraphServiceClient
+import com.microsoft.graph.models.Invitation
+import com.microsoft.graph.models.User
+import com.microsoft.graph.requests.*
 import spock.lang.Specification
 
 class UserServiceSpec extends Specification {
     private UserService userService
-    private IGraphServiceClient graphClient
+    private GraphServiceClient graphClient
     def id = "id"
     def user = new User(id: id)
 
     void setup() {
-        graphClient = Mock(IGraphServiceClient)
+        graphClient = Mock(GraphServiceClient)
         userService = new UserService(graphClient)
-        graphClient.users(_ as String) >> Mock(IUserRequestBuilder)
-        graphClient.users(_ as String).buildRequest() >> Mock(IUserRequest)
-        graphClient.users(_ as String).memberOf() >> Mock(IDirectoryObjectCollectionWithReferencesRequestBuilder)
-        graphClient.users(_ as String).memberOf().buildRequest() >> Mock(IDirectoryObjectCollectionWithReferencesRequest)
-        graphClient.users(_ as String).directReports() >> Mock(IDirectoryObjectCollectionWithReferencesRequestBuilder)
-        graphClient.users(_ as String).directReports().buildRequest() >> Mock(IDirectoryObjectCollectionWithReferencesRequest)
-        graphClient.invitations() >> Mock(IInvitationCollectionRequestBuilder)
-        graphClient.invitations().buildRequest() >> Mock(IInvitationCollectionRequest)
+        graphClient.users(_ as String) >> Mock(UserRequestBuilder)
+        graphClient.users(_ as String).buildRequest() >> Mock(UserRequest)
+        graphClient.users(_ as String).memberOf() >> Mock(DirectoryObjectCollectionWithReferencesRequestBuilder)
+        graphClient.users(_ as String).memberOf().buildRequest() >> Mock(DirectoryObjectCollectionWithReferencesRequest)
+        graphClient.users(_ as String).directReports() >> Mock(DirectoryObjectCollectionWithReferencesRequestBuilder)
+        graphClient.users(_ as String).directReports().buildRequest() >> Mock(DirectoryObjectCollectionWithReferencesRequest)
+        graphClient.invitations() >> Mock(InvitationCollectionRequestBuilder)
+        graphClient.invitations().buildRequest() >> Mock(InvitationCollectionRequest)
         graphClient.customRequest(_ as String) >> Mock(CustomRequestBuilder)
         graphClient.customRequest(_ as String).buildRequest() >> Mock(CustomRequest)
     }
@@ -70,7 +71,7 @@ class UserServiceSpec extends Specification {
 
     def "Get groups the user is member of"() {
         given:
-        def directoryObjectCollectionWithReferencesPage = Mock(IDirectoryObjectCollectionWithReferencesPage)
+        def directoryObjectCollectionWithReferencesPage = Mock(DirectoryObjectCollectionWithReferencesPage)
 
         when:
         def memberOf = userService.getMemberOf(id)
@@ -83,7 +84,7 @@ class UserServiceSpec extends Specification {
 
     def "Get users by manager"() {
         given:
-        def directoryObjectCollectionWithReferencesPage = Mock(IDirectoryObjectCollectionWithReferencesPage)
+        def directoryObjectCollectionWithReferencesPage = Mock(DirectoryObjectCollectionWithReferencesPage)
 
         when:
         def usersByManager = userService.getUsersByManager(id)

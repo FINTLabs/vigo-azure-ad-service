@@ -2,12 +2,12 @@ package no.vigo.azure.ad;
 
 import com.google.gson.JsonElement;
 import com.microsoft.graph.core.ClientException;
-import com.microsoft.graph.models.extensions.DirectoryObject;
-import com.microsoft.graph.models.extensions.Group;
-import com.microsoft.graph.models.extensions.IGraphServiceClient;
+import com.microsoft.graph.models.DirectoryObject;
+import com.microsoft.graph.models.Group;
+import com.microsoft.graph.requests.GraphServiceClient;
 import com.microsoft.graph.options.Option;
 import com.microsoft.graph.options.QueryOption;
-import com.microsoft.graph.requests.extensions.IDirectoryObjectCollectionWithReferencesPage;
+import com.microsoft.graph.requests.DirectoryObjectCollectionWithReferencesPage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class GroupService extends AzureServiceAbstract {
-    public GroupService(IGraphServiceClient graphClient) {
+    public GroupService(GraphServiceClient graphClient) {
         super(graphClient);
     }
 
@@ -97,13 +97,13 @@ public class GroupService extends AzureServiceAbstract {
             backoff = @Backoff(delay = 1000))
     public List<String> getGroupNamesByUser(String username) {
 
-        IDirectoryObjectCollectionWithReferencesPage response = graphClient.users(username)
+        DirectoryObjectCollectionWithReferencesPage response = graphClient.users(username)
                 .memberOf()
                 .buildRequest()
                 .get();
 
         return getPagedDirectoryObjects(response).stream()
-                .map(DirectoryObject::getRawObject)
+                .map(DirectoryObject::additionalDataManager)
                 .map(o -> o.get("displayName"))
                 .map(JsonElement::getAsString)
                 .collect(Collectors.toList());

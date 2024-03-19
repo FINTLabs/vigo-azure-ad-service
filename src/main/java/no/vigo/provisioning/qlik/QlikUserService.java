@@ -1,8 +1,11 @@
 package no.vigo.provisioning.qlik;
 
-import com.microsoft.graph.models.extensions.Group;
-import com.microsoft.graph.models.extensions.Invitation;
-import com.microsoft.graph.models.extensions.User;
+import com.microsoft.graph.models.DirectoryObject;
+import com.microsoft.graph.models.Group;
+import com.microsoft.graph.requests.DirectoryObjectCollectionWithReferencesPage;
+
+import com.microsoft.graph.models.Invitation;
+import com.microsoft.graph.models.User;
 import lombok.extern.slf4j.Slf4j;
 import no.vigo.Props;
 import no.vigo.azure.ad.AzureUserResponse;
@@ -210,17 +213,19 @@ public class QlikUserService {
 
     }
 
-    private final Supplier<Predicate<Group>> includeGroups = () -> group -> group.groupTypes.size() == 0 && !group.mailEnabled;
+    private final Supplier<Predicate<DirectoryObject>> includeGroups = () ->
+            directoryObject -> {
+                // Assuming directoryObject represents a Group
+                Group group = (Group) directoryObject;
+                return group.groupTypes.size() == 0 && !group.mailEnabled.booleanValue();
+            };
 
     private List<String> getHasGroups(QlikUser qLikUser) {
-        List<Group> memberOf = userService.getMemberOf(qLikUser.getAzureADUPN())
-                .stream()
-                .map(o -> userService.getSerializer().deserializeObject(o.getRawObject().toString(), Group.class))
-                .filter(includeGroups.get())
-                .collect(Collectors.toList());
+        List<DirectoryObject> memberOf = userService.getMemberOf(qLikUser.getAzureADUPN());
 
         return memberOf.stream()
-                .map(o -> o.id)
+                .filter(includeGroups.get())
+                .map(directoryObject -> directoryObject.id)
                 .collect(Collectors.toList());
     }
 

@@ -1,27 +1,26 @@
 package no.vigo.azure.ad
 
-import com.microsoft.graph.models.extensions.Group
-import com.microsoft.graph.models.extensions.IGraphServiceClient
-import com.microsoft.graph.requests.extensions.*
+import com.microsoft.graph.models.Group
+import com.microsoft.graph.requests.*
 import spock.lang.Specification
 
 
 class GroupServiceSpec extends Specification {
 
     private GroupService groupService
-    private IGraphServiceClient graphClient
-    private IGroupCollectionPage page
+    private GraphServiceClient graphClient
+    private GroupCollectionPage page
 
     void setup() {
-        graphClient = Mock(IGraphServiceClient)
+        graphClient = Mock(GraphServiceClient)
         groupService = new GroupService(graphClient)
-        graphClient.groups() >> Mock(IGroupCollectionRequestBuilder)
-        graphClient.groups().buildRequest(_ as List) >> Mock(IGroupCollectionRequest)
-        graphClient.groups(_ as String) >> Mock(IGroupCollectionRequestBuilder)
-        //graphClient.groups(_ as String).members(_ as String) >> Mock(IDirectoryObjectWithReferenceRequestBuilder)
-        //graphClient.groups(_ as String).members(_ as String).reference() >> Mock(IDirectoryObjectReferenceRequestBuilder)
-        //graphClient.groups(_ as String).members(_ as String).reference().buildRequest() >> Mock(IDirectoryObjectReferenceRequest)
-        page = Mock(IGroupCollectionPage)
+        graphClient.groups() >> Mock(GroupCollectionRequestBuilder)
+        graphClient.groups().buildRequest(_ as List) >> Mock(GroupCollectionRequest)
+        graphClient.groups(_ as String) >> Mock(GroupCollectionRequestBuilder)
+        //graphClient.groups(_ as String).members(_ as String) >> Mock(DirectoryObjectWithReferenceRequestBuilder)
+        //graphClient.groups(_ as String).members(_ as String).reference() >> Mock(DirectoryObjectReferenceRequestBuilder)
+        //graphClient.groups(_ as String).members(_ as String).reference().buildRequest() >> Mock(DirectoryObjectReferenceRequest)
+        page = Mock(GroupCollectionPage)
 
     }
 

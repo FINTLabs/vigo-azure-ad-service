@@ -3,11 +3,11 @@ package no.vigo.azure.ad;
 import com.google.gson.JsonObject;
 import com.microsoft.graph.core.ClientException;
 import com.microsoft.graph.http.GraphServiceException;
-import com.microsoft.graph.models.extensions.DirectoryObject;
-import com.microsoft.graph.models.extensions.IGraphServiceClient;
-import com.microsoft.graph.models.extensions.Invitation;
-import com.microsoft.graph.models.extensions.User;
-import com.microsoft.graph.requests.extensions.IDirectoryObjectCollectionWithReferencesPage;
+import com.microsoft.graph.models.DirectoryObject;
+import com.microsoft.graph.requests.GraphServiceClient;
+import com.microsoft.graph.models.Invitation;
+import com.microsoft.graph.models.User;
+import com.microsoft.graph.requests.DirectoryObjectCollectionWithReferencesPage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class UserService extends AzureServiceAbstract {
-    public UserService(IGraphServiceClient graphClient) {
+    public UserService(GraphServiceClient graphClient) {
         super(graphClient);
     }
 
@@ -72,15 +72,28 @@ public class UserService extends AzureServiceAbstract {
     }
 
     public List<JsonObject> getUsersByManager(String managerUpn) {
-        IDirectoryObjectCollectionWithReferencesPage response = graphClient
+        DirectoryObjectCollectionWithReferencesPage response = graphClient
                 .users(managerUpn)
                 .directReports()
                 .buildRequest()
                 .get();
 
         return getPagedDirectoryObjects(response).stream()
-                .map(DirectoryObject::getRawObject)
+                .map(this::convertToJsonObject)
                 .collect(Collectors.toList());
+    }
+
+    private JsonObject convertToJsonObject(DirectoryObject directoryObject) {
+        // Assuming directoryObject represents a User object
+        User user = (User) directoryObject;
+
+        // Constructing JSON object manually
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("id", user.id);
+        jsonObject.addProperty("displayName", user.displayName);
+        // Add other properties as needed
+
+        return jsonObject;
     }
 
 

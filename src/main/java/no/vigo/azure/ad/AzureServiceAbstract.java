@@ -1,12 +1,12 @@
 package no.vigo.azure.ad;
 
-import com.microsoft.graph.models.extensions.DirectoryObject;
-import com.microsoft.graph.models.extensions.Group;
-import com.microsoft.graph.models.extensions.IGraphServiceClient;
-import com.microsoft.graph.requests.extensions.IDirectoryObjectCollectionWithReferencesPage;
-import com.microsoft.graph.requests.extensions.IDirectoryObjectCollectionWithReferencesRequestBuilder;
-import com.microsoft.graph.requests.extensions.IGroupCollectionPage;
-import com.microsoft.graph.requests.extensions.IGroupCollectionRequestBuilder;
+import com.microsoft.graph.models.DirectoryObject;
+import com.microsoft.graph.models.Group;
+import com.microsoft.graph.requests.GraphServiceClient;
+import com.microsoft.graph.requests.DirectoryObjectCollectionWithReferencesPage;
+import com.microsoft.graph.requests.DirectoryObjectCollectionWithReferencesRequestBuilder;
+import com.microsoft.graph.requests.GroupCollectionPage;
+import com.microsoft.graph.requests.GroupCollectionRequestBuilder;
 import com.microsoft.graph.serializer.ISerializer;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +16,9 @@ import java.util.List;
 @Service
 public abstract class AzureServiceAbstract {
 
-    protected final IGraphServiceClient graphClient;
+    protected final GraphServiceClient graphClient;
 
-    public AzureServiceAbstract(IGraphServiceClient graphClient) {
+    public AzureServiceAbstract(GraphServiceClient graphClient) {
         this.graphClient = graphClient;
     }
 
@@ -26,11 +26,11 @@ public abstract class AzureServiceAbstract {
         return graphClient.getSerializer();
     }
 
-    protected List<DirectoryObject> getPagedDirectoryObjects(IDirectoryObjectCollectionWithReferencesPage response) {
+    protected List<DirectoryObject> getPagedDirectoryObjects(DirectoryObjectCollectionWithReferencesPage response) {
         List<DirectoryObject> directoryObjects = new ArrayList<>(response.getCurrentPage());
-        IDirectoryObjectCollectionWithReferencesRequestBuilder nextPage = response.getNextPage();
+        DirectoryObjectCollectionWithReferencesRequestBuilder nextPage = response.getNextPage();
         while (nextPage != null) {
-            IDirectoryObjectCollectionWithReferencesPage page = nextPage.buildRequest().get();
+            DirectoryObjectCollectionWithReferencesPage page = nextPage.buildRequest().get();
             directoryObjects.addAll(page.getCurrentPage());
             nextPage = page.getNextPage();
         }
@@ -38,11 +38,11 @@ public abstract class AzureServiceAbstract {
         return directoryObjects;
     }
 
-    protected List<Group> getPagedGroupObjects(IGroupCollectionPage response) {
+    protected List<Group> getPagedGroupObjects(GroupCollectionPage response) {
         List<Group> directoryObjects = new ArrayList<>(response.getCurrentPage());
-        IGroupCollectionRequestBuilder nextPage = response.getNextPage();
+        GroupCollectionRequestBuilder nextPage = response.getNextPage();
         while (nextPage != null) {
-            IGroupCollectionPage page = nextPage.buildRequest().get();
+            GroupCollectionPage page = nextPage.buildRequest().get();
             directoryObjects.addAll(page.getCurrentPage());
             nextPage = page.getNextPage();
         }
